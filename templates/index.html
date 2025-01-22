@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hate Speech Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Hate Speech Detection ~ AI Also Have Emotions...!! Wanna... Try Me 🤫</h1>
+        <form action="{{ url_for('predict') }}" method="post">
+            <textarea name="text" id="textInput" rows="4" cols="50" placeholder="Enter a sentence to check for hate speech"></textarea>
+            <button type="submit">Check</button>
+        </form>
+        {% if prediction_text %}
+        <p>{{ prediction_text }}</p>
+        {% endif %}
+        <div class="buttons">
+            <button onclick="clearContent()">Refresh</button>
+            <button class="graph" onclick="loadContent(['static/images/graph.jpg','static/images/graph2.jpg'], 'image')">Graphs</button>
+            <button class="showNoteBook" onclick="loadContent('static/pages/Notebook.html')">NoteBook</button>
+            <button class="apiService" onclick="loadContent('static/pages/API.html')">API</button>
+            <button class="epochs" onclick="loadContent('static/pages/epochs.html')">Epochs</button>
+        </div>
+        <!-- Add the dynamic content area -->
+        <div id="dynamicContent"></div>
+    </div>
+
+    <!-- JavaScript for button actions -->
+    <script>
+        function clearContent() {
+            // Clear dynamic content when refresh button is clicked
+            document.getElementById('dynamicContent').innerHTML = '';
+        }
+
+        function loadContent(contentFiles, contentType) {
+            if (contentType === 'image') {
+                // Load images
+                let imagesHTML = '<div class="image-container">';
+                contentFiles.forEach(image => {
+                    imagesHTML += `<img src="${image}" alt="Graph">`;
+                });
+                imagesHTML += '</div>';
+                document.getElementById('dynamicContent').innerHTML = imagesHTML;
+            } else {
+                // Load HTML or other textual content
+                fetch(contentFiles)
+                    .then(response => response.text())
+                    .then(content => {
+                        document.getElementById('dynamicContent').innerHTML = content;
+                    })
+                    .catch(error => console.error('Error loading content:', error));
+            }
+        }
+    </script>
+</body>
+</html>

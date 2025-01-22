@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hate Speech Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Hate Speech Detection</h1>
+        <form action="{{ url_for('predict') }}" method="post">
+            <textarea name="text" id="textInput" rows="4" cols="50" placeholder="Enter a sentence to check for hate speech"></textarea>
+            <button type="submit">Check</button>
+        </form>
+        {% if prediction_text %}
+        <p>{{ prediction_text }}</p>
+        {% endif %}
+        <div class="buttons">
+            <button onclick="clearContent()">Refresh</button>
+            <button class="graph" onclick="showGraphs()">Graphs</button>
+            <button class="showNoteBook" onclick="showCode()">NoteBook</button>
+        </div>
+    </div>
+
+    <!-- JavaScript for button actions -->
+    <script>
+        function clearContent() {
+            document.getElementById('textInput').value = ''; // Clear the textarea
+            {% if prediction_text %}
+            document.querySelector('p').textContent = ''; // Clear the prediction text
+            {% endif %}
+        }
+
+        function showGraphs() {
+            alert("Graphs will be shown here.");
+        }
+
+        function showCode() {
+            alert("Code will be shown here.");
+        }
+    </script>
+</body>
+</html>

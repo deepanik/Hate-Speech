@@ -18,7 +18,7 @@ A powerful Flask-based API that detects hate speech in text using machine learni
 - **Real-time Communication**: Flask-SocketIO
 - **Language Detection**: langdetect
 - **Translation**: googletrans
-- **Deployment**: Railway.app
+- **Deployment**: Railway.app, Render
 
 ## Installation
 
@@ -86,6 +86,33 @@ To deploy:
 1. Push your code to GitHub
 2. Connect your repository to Railway
 3. Railway will automatically deploy your application
+
+## Deployment on Render
+
+This project is configured for easy deployment on Render. Follow these steps:
+
+1. Fork or push this repository to your GitHub account
+2. Create a new account on [Render](https://render.com) if you haven't already
+3. In the Render dashboard, click on "New +" and select "Web Service"
+4. Connect your GitHub account and select this repository
+5. Configure the deployment:
+   - Name: `hate-speech-api` (or your preferred name)
+   - Environment: `Python`
+   - Region: Choose the closest to your users
+   - Branch: `main` (or your default branch)
+   - Build Command: `pip install -r requirements.txt`
+   - Start Command: `gunicorn --worker-class eventlet -w 1 app:app`
+   - Plan: Free
+
+The deployment will automatically begin. Once completed, you can access your API at the provided Render URL.
+
+### Environment Variables
+
+The following environment variables are automatically configured in the `render.yaml`:
+- `PORT`: 8000
+- `PYTHON_VERSION`: 3.9.0
+
+You can add additional environment variables through the Render dashboard if needed.
 
 ## Contributing
 

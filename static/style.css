@@ -145,6 +145,88 @@ textarea::placeholder {
     color: #6a737d;
 }
 
+/* Add styles for prediction results */
+#result {
+    margin: 20px 0;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.main-result {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.main-result.hate-speech {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.main-result.offensive-language {
+    background-color: #fff3e0;
+    color: #ef6c00;
+}
+
+.main-result.neither {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.confidence {
+    font-size: 16px;
+    opacity: 0.8;
+    margin-left: 10px;
+}
+
+.probability-bars {
+    margin-top: 20px;
+}
+
+.prob-item {
+    margin: 10px 0;
+}
+
+.prob-item label {
+    display: inline-block;
+    width: 150px;
+    font-weight: bold;
+}
+
+.prob-bar {
+    display: inline-block;
+    width: calc(100% - 160px);
+    height: 20px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    position: relative;
+}
+
+.prob-fill {
+    height: 100%;
+    background-color: #007bff;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.prob-bar span {
+    position: absolute;
+    right: -50px;
+    top: 0;
+    font-size: 14px;
+}
+
+.error {
+    color: #dc3545;
+    padding: 10px;
+    background-color: #f8d7da;
+    border-radius: 4px;
+    margin: 10px 0;
+}
 
 .output {
     background-color: #f6f8fa; 

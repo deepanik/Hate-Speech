@@ -1,1 +1,1 @@
-web: emosort:app
+web: python app.py

@@ -28,7 +28,16 @@ app = Flask(__name__)
 app.static_folder = 'static'
 app.static_url_path = '/static'
 CORS(app)
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
+
+# Configure SocketIO with proper settings for Render deployment
+socketio = SocketIO(
+    app,
+    cors_allowed_origins="*",
+    async_mode='eventlet',
+    ping_timeout=30,
+    ping_interval=15,
+    transports=['websocket', 'polling']
+)
 
 # Load the model and tokenizer
 model = load_model('model/hate_speech_model.h5')

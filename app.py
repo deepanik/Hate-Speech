@@ -1,3 +1,7 @@
+import os
+import logging
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # Suppress TF logging
+
 import eventlet
 eventlet.monkey_patch()
 

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hate Speech Detection - API</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Hate Speech Detection - API</h1>
+        <p>Instructions on how to use the Hate Speech Detection API:</p>
+        <ol>
+            <li>Make a POST request to the API endpoint with the following JSON payload:
+                <pre>
+{
+    "text": "Your text to be checked for hate speech"
+}
+                </pre>
+            </li>
+            <li>The API will return a JSON response with the prediction result. Example response:
+                <pre>
+{
+    "text": "Your text to be checked for hate speech",
+    "prediction": "Hate Speech" // or "Non-Hate Speech"
+}
+                </pre>
+            </li>
+        </ol>
+    </div>
+    <div>
+            <li>Install the necessary dependencies: <code>pip install requests</code></li>
+            <li>Use the following code snippet to interact with the Hate Speech Detection API:
+                <pre>
+import requests
+
+API_ENDPOINT = "http://endpoint/predict"
+
+text_to_check = "Your text to be checked for hate speech"
+payload = {"text": text_to_check}
+
+response = requests.post(API_ENDPOINT, json=payload)
+prediction = response.json()["prediction"]
+print("Prediction:", prediction)
+                </pre>
+            </li>
+        </ol>
+    </div>
+
+    </div>
+</body>
+</html>

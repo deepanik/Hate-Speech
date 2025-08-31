@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hate Speech Detection Code</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        .code-block {
+            background-color: #ffffff;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        .code-line {
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hate Speech Detection Code</h1>
+    
+    <!-- Code block -->
+    <div class="code-block">
+        <div class="code-line"><span style="color: #007f00;">from</span> keras.callbacks <span style="color: #007f00;">import</span> EarlyStopping, ReduceLROnPlateau</div>
+        <div class="code-line"><span style="color: #007f00;">import</span> numpy <span style="color: #007f00;">as</span> np</div>
+        <div class="code-line"><span style="color: #007f00;">import</span> pandas <span style="color: #007f00;">as</span> pd</div>
+        <div class="code-line"><span style="color: #007f00;">import</span> matplotlib.pyplot <span style="color: #007f00;">as</span> plt</div>
+        <div class="code-line"><span style="color: #007f00;">import</span> seaborn <span style="color: #007f00;">as</span> sb</div>
+        <div class="code-line"><span style="color: #007f00;">from</span> sklearn.model_selection <span style="color: #007f00;">import</span> train_test_split</div>
+        <div class="code-line"><span style="color: #007f00;">import</span> nltk</div>
+        <div class="code-line"><span style="color: #007f00;">import</span> string</div>
+        <div class="code-line"><span style="color: #007f00;">import</span> warnings</div>
+        <div class="code-line"><span style="color: #007f00;">from</span> nltk.corpus <span style="color: #007f00;">import</span> stopwords</div>
+        <div class="code-line"><span style="color: #007f00;">from</span> nltk.stem <span style="color: #007f00;">import</span> WordNetLemmatizer</div>
+        <div class="code-line"><span style="color: #007f00;">from</span> wordcloud <span style="color: #007f00;">import</span> WordCloud</div>
+        <div class="code-line"><span style="color: #007f00;">import</span> tensorflow <span style="color: #007f00;">as</span> tf</div>
+        <div class="code-line"><span style="color: #007f00;">from</span> tensorflow <span style="color: #007f00;">import</span> keras</div>
+        <div class="code-line"><span style="color: #007f00;">from</span> keras <span style="color: #007f00;">import</span> layers</div>
+        <div class="code-line"><span style="color: #007f00;">from</span> tensorflow.keras.preprocessing.text <span style="color: #007f00;">import</span> Tokenizer</div>
+        <div class="code-line"><span style="color: #007f00;">from</span> tensorflow.keras.preprocessing.sequence <span style="color: #007f00;">import</span> pad_sequences</div>
+        <div class="code-line">nltk.download('stopwords')</div>
+        <div class="code-line">nltk.download('omw-1.4')</div>
+        <div class="code-line">nltk.download('wordnet')</div>
+        <div class="code-line">warnings.filterwarnings('ignore')</div>
+        <div class="code-line"># DATA SET</div>
+        <div class="code-line">df = pd.read_csv('./hate_speech.csv')</div>
+        <div class="code-line">df.head()</div>
+        <div class="code-line"># Lower case all the words of the tweet before any preprocessing</div>
+        <div class="code-line">df['tweet'] = df['tweet'].str.lower()</div>
+        <div class="code-line"># Removing punctuations present in the text</div>
+        <div class="code-line">punctuations_list = string.punctuation</div>
+        <div class="code-line">def remove_punctuations(text):</div>
+        <div class="code-line">    temp = str.maketrans('', '', punctuations_list)</div>
+        <div class="code-line">    return text.translate(temp)</div>
+        <div class="code-line">df['tweet'] = df['tweet'].apply(lambda x: remove_punctuations(x))</div>
+        <div class="code-line">def remove_stopwords(text):</div>
+        <div class="code-line">    stop_words = stopwords.words('english')</div>
+        <div class="code-line">    imp_words = []</div>
+        <div class="code-line">    for word in str(text).split():</div>
+        <div class="code-line">        if word not in stop_words:</div>
+        <div class="code-line">            lemmatizer = WordNetLemmatizer()</div>
+        <div class="code-line">            lemmatizer.lemmatize(word)</div>
+        <div class="code-line">            imp_words.append(word)</div>
+        <div class="code-line">    output = " ".join(imp_words)</div>
+        <div class="code-line">    return output</div>
+        <div class="code-line">df['tweet'] = df['tweet'].apply(lambda text: remove_stopwords(text))</div>
+        <div class="code-line">class_2 = df[df['class'] == 2]</div>
+        <div class="code-line">class_1 = df[df['class'] == 1].sample(n=3500)</div>
+        <div class="code-line">class_0 = df[df['class'] == 0]</div>
+        <div class="code-line">balanced_df = pd.concat([class_0, class_0, class_0, class_1, class_2], axis=0)</div>
+        <div class="code-line">features = balanced_df['tweet']</div>
+        <div class="code-line">target = balanced_df['class']</div>
+        <div class="code-line">X_train, X_val, Y_train, Y_val = train_test_split(features, target, test_size=0.2, random_state=22)</div>
+        <div class="code-line">Y_train = pd.get_dummies(Y_train)</div>
+        <div class="code-line">Y_val = pd.get_dummies(Y_val)</div>
+        <div class="code-line">max_words = 5000</div>
+        <div class="code-line">max_len = 100</div>
+        <div class="code-line">token = Tokenizer(num_words=max_words, lower=True, split=' ')</div>
+        <div class="code-line">token.fit_on_texts(X_train)</div>
+        <div class="code-line">Training_seq = token.texts_to_sequences(X_train)</div>
+        <div class="code-line">Training_pad = pad_sequences(Training_seq, maxlen=100, padding='post', truncating='post')</div>
+        <div class="code-line">Testing_seq = token.texts_to_sequences(X_val)</div>
+        <div class="code-line">Testing_pad = pad_sequences(Testing_seq, maxlen=100, padding='post', truncating='post')</div>
+        <div class="code-line">model = keras.models.Sequential([</div>
+        <div class="code-line">    layers.Embedding(max_words, 32, input_shape=(max_len,)),</div>
+        <div class="code-line">    layers.Conv1D(128, 5, activation='relu'),</div>
+        <div class="code-line">    layers.GlobalMaxPooling1D(),</div>
+        <div class="code-line">    layers.Dense(512, activation='relu'),</div>
+        <div class="code-line">    layers.Dropout(0.3),</div>
+        <div class="code-line">    layers.Dense(3, activation='softmax')</div>
+        <div class="code-line">])</div>
+        <div class="code-line">model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])</div>
+        <div class="code-line">model.summary()</div>
+        <div class="code-line">history = model.fit(Training_pad, Y_train, validation_data=(Testing_pad, Y_val), epochs=50000, verbose=1, batch_size=32)</div>
+        <div class="code-line">history_df = pd.DataFrame(history.history)</div>
+        <div class="code-line">history_df.loc[:, ['loss', 'val_loss']].plot()</div>
+        <div class="code-line">history_df.loc[:, ['accuracy', 'val_accuracy']].plot()</div>
+        <div class="code-line">plt.show()</div>
+        <div class="code-line"># Function to preprocess user input</div>
+        <div class="code-line">def preprocess_input(text):</div>
+        <div class="code-line">    text = text.lower()</div>
+        <div class="code-line">    text = remove_punctuations(text)</div>
+        <div class="code-line">    text = remove_stopwords(text)</div>
+        <div class="code-line">    return text</div>
+        <div class="code-line"># Function to predict hate speech</div>
+        <div class="code-line">def predict_hate_speech(text):</div>
+        <div class="code-line">    text = preprocess_input(text)</div>
+        <div class="code-line">    sequence = token.texts_to_sequences([text])</div>
+        <div class="code-line">    padded_sequence = pad_sequences(sequence, maxlen=50, padding='post', truncating='post')</div>
+        <div class="code-line">    prediction = model.predict(padded_sequence)</div>
+        <div class="code-line">    return prediction</div>
+        <div class="code-line"># Interactive user input</div>
+        <div class="code-line">while True:</div>
+        <div class="code-line">    user_input = input("Enter a sentence to check for hate speech (type 'quit' to exit): ")</div>
+        <div class="code-line">    if user_input.lower() == 'quit':</div>
+        <div class="code-line">        break</div>
+        <div class="code-line">    else:</div>
+        <div class="code-line">        prediction = predict_hate_speech(user_input)</div>
+        <div class="code-line">        if np.argmax(prediction) == 1:</div>
+        <div class="code-line">            print("The input is classified as hate speech.")</div>
+        <div class="code-line">        else:</div>
+        <div class="code-line">            print("The input is not classified as hate speech.")</div>
+        <div class="code-line">model.save("hate_speech_detection_model.h5")</div>
+        <div class="code-line">model.save("converted_model.tflite")</div>
+    </div>
+</body>
+</html>
+

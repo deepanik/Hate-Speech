@@ -1,3 +1,6 @@
+<!-- Python 3.13.5 -->
+
+
 # Hate Speech Detection API
 
 A powerful Flask-based API that detects hate speech in text using machine learning. The API supports real-time analysis, multiple languages, and provides alternative suggestions for toxic words.
